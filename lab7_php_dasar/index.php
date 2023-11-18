@@ -1,71 +1,86 @@
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nama = isset($_POST["nama"]) ? $_POST["nama"] : "";
+    $tanggal_lahir = isset($_POST["tanggal_lahir"]) ? $_POST["tanggal_lahir"] : "";
+    $pekerjaan = isset($_POST["pekerjaan"]) ? $_POST["pekerjaan"] : "";
+
+
+    $umur = calculateAge($tanggal_lahir);
+
+    $pekerjaan_gaji = array(
+        'Programmer' => 5000000,
+        'Desainer' => 4500000,
+        'Marketing' => 4000000
+    );
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Input PHP</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .form p {
+            margin: 0 0 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .form p strong {
+            color: #4caf50;
+        }
+
+        .form p:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+    <title>Hasil Formulir POST</title>
 </head>
 <body>
 
+<div class="container-content">
+    <div class="form">
+        <?php if ($_SERVER["REQUEST_METHOD"] == "POST"): ?>
+            <p><strong>Nama:</strong> <?php echo $nama; ?></p>
+            <p><strong>Tanggal Lahir:</strong> <?php echo $tanggal_lahir; ?></p>
+            <p><strong>Umur:</strong> <?php echo $umur; ?> tahun</p>
+            <p><strong>Pekerjaan:</strong> <?php echo $pekerjaan; ?></p>
+            <p><strong>Gaji:</strong> Rp <?php echo number_format($pekerjaan_gaji[$pekerjaan]); ?></p>
+        <?php else: ?>
+            <p>Formulir belum di-submit.</p>
+        <?php endif; ?>
+    </div>
+</div>
+
+</body>
+</html>
+
 <?php
-// Fungsi untuk menghitung umur berdasarkan tanggal lahir
-function hitungUmur($tanggal_lahir) {
-    $tgl_lahir = new DateTime($tanggal_lahir);
+function calculateAge($birthdate) {
+    $tgl_lahir = new DateTime($birthdate);
     $sekarang = new DateTime('today');
     $umur = $sekarang->diff($tgl_lahir);
     return $umur->y;
 }
-
-// Daftar pekerjaan dan gaji
-$pekerjaan_gaji = array(
-    'Programmer' => 5000000,
-    'Desainer' => 4500000,
-    'Marketing' => 4000000
-);
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Ambil nilai inputan dari form
-    $nama = $_POST['nama'];
-    $tanggal_lahir = $_POST['tanggal_lahir'];
-    $pekerjaan = $_POST['pekerjaan'];
-
-    // Validasi inputan
-    if (empty($nama) || empty($tanggal_lahir) || empty($pekerjaan)) {
-        echo "Semua field harus diisi!";
-    } else {
-        // Hitung umur berdasarkan tanggal lahir
-        $umur = hitungUmur($tanggal_lahir);
-
-        // Tampilkan output
-        echo "<h2>Output:</h2>";
-        echo "<p>Nama: $nama</p>";
-        echo "<p>Tanggal Lahir: $tanggal_lahir</p>";
-        echo "<p>Umur: $umur tahun</p>";
-        echo "<p>Pekerjaan: $pekerjaan</p>";
-        echo "<p>Gaji: Rp " . number_format($pekerjaan_gaji[$pekerjaan]) . "</p>";
-    }
-}
 ?>
-
-<!-- Form input -->
-<h2>Form Input</h2>
-<form method="post" action="">
-    <label for="nama">Nama:</label>
-    <input type="text" name="nama" required><br>
-
-    <label for="tanggal_lahir">Tanggal Lahir:</label>
-    <input type="date" name="tanggal_lahir" required><br>
-
-    <label for="pekerjaan">Pekerjaan:</label>
-    <select name="pekerjaan" required>
-        <option value="">Pilih Pekerjaan</option>
-        <option value="Programmer">Programmer</option>
-        <option value="Desainer">Desainer</option>
-        <option value="Marketing">Marketing</option>
-    </select><br>
-
-    <input type="submit" value="Submit">
-</form>
-
-</body>
-</html>
